@@ -11,7 +11,7 @@ while True:
     db = mydb.MyDB()
     db.connect()
     haveAccount = input("Mevcut bir hesabınız yok ise 'Q' yazarak yeni bir hesap oluşturulabilirsiniz. Mevcut hesabınız ile giriş yapmak için 'Enter' basarak devam ediniz.")
-
+    "asdasd"
     if haveAccount == "Q":
         print("Bilgilerinizi dikkatle giriniz.")
         time.sleep(5)
