@@ -1,0 +1,342 @@
+Index: app/database/MyDB.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pymysql\nimport User as userr\nimport UserDB as userdb\n\n\nclass MyDB:\n    def __init__(self):\n        self.HOST = \"localhost\"\n        self.USER = \"root\"\n        self.PASSWORD = \"\"\n        self.DATABASE = \"MyDB\"\n\n    def connect(self):\n\n        try:\n            self.conn = pymysql.connect(\n                host=self.HOST,\n                user=self.USER,\n                password=self.PASSWORD,\n                database=self.DATABASE\n            )\n\n            self.cursor = self.conn.cursor()\n\n        except:\n            print(\"Veritabanına bağlanırken hata. Lütfen veritabanının oluşturulduğundan emin olun.\")\n\n        try:\n            cstr1 = \"CREATE DATABASE IF NOT EXISTS MyDB\"\n            self.cursor.execute(cstr1)\n            db = self.cursor.fetchone()\n        except:\n            print(\"Veritabanı oluşturulurken bir hata oluştu.\")\n\n        try:\n            cstr2 = \"SELECT * FROM `users`\"\n            self.cursor.execute(cstr2)\n            table = self.cursor.fetchone()\n        except pymysql.err.ProgrammingError:\n            qstr1 = \"CREATE TABLE IF NOT EXISTS `users` (ID INT AUTO_INCREMENT NOT NULL, email varchar(255) NOT NULL,\" \\\n                    \" username varchar(255) NOT NULL, password varchar(255) NOT NULL, permission varchar(255),\" \\\n                    \" settings varchar(1000), description varchar(1000), PRIMARY KEY (ID))\"\n            self.cursor.execute(qstr1)\n            print(\"Tablo oluşturuldu. \\n\", qstr1)\n\n            qstr2 = \" INSERT INTO `users`(`email`, `username`, `password`, `permission`, `settings`, `description`) VALUES \" \\\n                    \"('admin','admin','admin','developer','none','none') \"\n            self.cursor.execute(qstr2)\n            self.conn.commit()\n            print(\"Geliştirici hesabı oluşturuldu\", qstr2)\n\n        print(\"Veritabanı bağlantısı kuruldu.\")\n\n    def _register(self, email, username, password):\n        cstr1 = \"SELECT * FROM `users` WHERE email = '{}'\"\n        cstr1 = cstr1.format(email)\n        self.cursor.execute(cstr1)\n        data = self.cursor.fetchone()\n\n        if data:\n            print(\"email exists\")\n            return False\n        else:\n            cstr2 = \" INSERT INTO `users`(`email`, `username`, `password`, `permission`, `settings`, `description`) VALUES \" \\\n                    \"('{}','{}','{}','{}','{}','{}') \"\n            cstr2 = cstr2.format(email, username, password, \"user\", \"none\", \"none\")\n            self.cursor.execute(cstr2)\n            self.conn.commit()\n\n            mail = email.split('@')\n            mail = mail[0] + \"#\" + mail[1]\n            cstr3 = \"\"\" CREATE DATABASE IF NOT EXISTS `{}_{}` \"\"\"\n            cstr3 = cstr3.format(mail, username)\n            self.cursor.execute(cstr3)\n            print(\"Kullanıcı database'i oluşturuldu: \", cstr3)\n            print(\"kayıt yapıldı\")\n            return True\n\n    def _login(self):\n        email = input(\"Email: \")\n        password = input(\"Şifre: \")\n\n        cstr1 = \"\"\" SELECT * FROM users WHERE email ='{}' AND password ='{}' \"\"\"\n        cstr1 = cstr1.format(email, password)\n        self.cursor.execute(cstr1)\n        self.conn.commit()\n        data = self.cursor.fetchone()\n\n        if data:\n            print(\"Kullanıcının verileri: \", data)\n            id = data[0]\n            email = data[1]\n            username = data[2]\n            password = data[3]\n            permission = data[4]\n            settings = data[5]\n            description = data[6]\n            user = userr.User(id, email, username, password, permission, settings, description)\n\n            if permission == \"developer\":\n                print(\"geliştirici modu\")\n            else:\n                dbname = email.split('@')\n                dbname = dbname[0] + \"#\" + dbname[1] + \"_\" + username\n\n                userdb.UserDB(dbname)\n            return True, user\n        else:\n            print(\"data yok\")\n            return False\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/database/MyDB.py b/app/database/MyDB.py
+--- a/app/database/MyDB.py	(revision 82bc5961c904ea74185d06b227218c3c7eb6f3c2)
++++ b/app/database/MyDB.py	(date 1666902390443)
+@@ -108,3 +108,48 @@
+         else:
+             print("data yok")
+             return False
++
++class User:
++    def __init__(self, id, email, username, password, permission, settings, description):
++        self.USER_ID = id
++        self.USER_EMAIL = email
++        self.USER_USERNAME = username
++        self.USER_PASSWORD = password
++        self.USER_PERMISSION = permission
++        self.USER_SETTINGS = settings
++        self.USER_DESCRIPTION = description
++
++    def newTable(self):
++        pass
++
++    def newSubUser(self):
++        pass
++
++    # Kullanıcının yapabileceği işlemler/fonksiyonlar buraya yazılacak.
++
++
++class UserDB:
++    def __init__(self, database):
++        self.HOST = "localhost"
++        self.USER = "root"
++        self.PASSWORD = ""
++        self.DATABASE = database
++
++        try:
++            self.conn = pymysql.connect(
++                host=self.HOST,
++                user=self.USER,
++                password=self.PASSWORD,
++                database=self.DATABASE
++            )
++
++            self.cursor = self.conn.cursor()
++
++            print(f"Kullanıcı {self.DATABASE} veritabanına bağlandı")
++
++        except:
++            print("UserDB bağlanırken bir hata oluştu.")
++
++    def createTable(self):
++        pass
++
+Index: app/main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import time\nimport MyMods.settings as mod\nimport database.MyDB as mydb\nfrom app import App\n\nprint(mod.starting_motd)\ntime.sleep(5)\nmod.clear()\n\nwhile True:\n    db = mydb.MyDB()\n    db.connect()\n    haveAccount = input(\"Mevcut bir hesabınız yok ise 'Q' yazarak yeni bir hesap oluşturulabilirsiniz. Mevcut hesabınız ile giriş yapmak için 'Enter' basarak devam ediniz.\")\n    \"asdasd\"\n    if haveAccount == \"Q\":\n        print(\"Bilgilerinizi dikkatle giriniz.\")\n        time.sleep(5)\n        mod.clear()\n        while True:\n            email = input(\"Email: \")\n            username = input(\"Kullanıcı adı: \")\n            password = input(\"Şifre: \")\n            mailCheck = db._register(email, username, password)\n\n            if mailCheck == True:\n                print(\"kayıt başarılı.\")\n                break\n            elif mailCheck == False:\n                print(\"mail mevcut\")\n            else:\n                print(\"hata\")\n        time.sleep(7)\n        mod.clear()\n\n        while True:\n            auth, user = db._login()\n            if auth == True:\n                if user:\n                    app = App(user)\n                    app.start()\n                    break\n            else:\n                continue\n        break\n    else:\n        auth, user = db._login()\n        if auth == True:\n            if user:\n                app = App(user)\n                app.start()\n                break\n        else:\n            continue\n\n\n\n\n\n\n\n\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/main.py b/app/main.py
+--- a/app/main.py	(revision 82bc5961c904ea74185d06b227218c3c7eb6f3c2)
++++ b/app/main.py	(date 1666902487077)
+@@ -1,7 +1,105 @@
+ import time
+ import MyMods.settings as mod
+-import database.MyDB as mydb
+-from app import App
++from database.MyDB import MyDB
++#from app import App
++
++class App:
++    def __init__(self, user):
++        self.db = MyDB()
++        self.db.connect()
++
++        self.user = user
++
++        self.user_permission = self.user.USER_PERMISSION
++
++    def start(self):
++        while True:
++            if self.user_permission == "subuser":
++                print(mod.subuser_menu)
++
++                doit = input("İşlem numarası girin: ")
++
++                if doit == "0":
++                    break
++                elif doit == "1":
++                    print("Seçildi: ", doit)
++                elif doit == "2":
++                    print("Seçildi: ", doit)
++                elif doit == "3":
++                    print("Seçildi: ", doit)
++                elif doit == "4":
++                    print("Seçildi: ", doit)
++                else:
++                    print("Geçersiz işlem")
++
++            elif self.user_permission == "user" or "developer":
++                print(mod.user_menu)
++
++                doit = input("İşlem numarası girin: ")
++
++                if doit == "0":
++                    break
++                elif doit == "1":
++                    print("Seçildi: ", doit)
++                elif doit == "2":
++                    print("Seçildi: ", doit)
++                elif doit == "3":
++                    print("Seçildi: ", doit)
++                elif doit == "4":
++                    print("Seçildi: ", doit)
++                elif doit == "5":
++                    print("Seçildi: ", doit)
++                elif doit == "6":
++                    print("Seçildi: ", doit)
++                elif doit == "7":
++                    print("Seçildi: ", doit)
++                elif doit == "8":
++                    self.user.newTable()
++                elif doit == "9":
++                    print("Seçildi: ", doit)
++                elif doit == "10":
++                    print("Seçildi: ", doit)
++                elif doit == "11":
++                    print("Seçildi: ", doit)
++                else:
++                    pass
++            else:
++                print("Devam etmek için gerekli yetkiye sahip değilsin!")
++                break
++
++    def showAllData(self):
++        pass
++
++    def addNew(self, a, b, c, d, x1, x2, y1, y2, z):
++        pass
++
++    def edit(self):
++        pass
++
++    def delete(self):
++        pass
++
++    def newSubUser(self):
++        pass
++
++    def editSubUser(self):
++        pass
++
++    def deleteSubUser(self):
++        pass
++
++    def newTable(self):
++        pass
++
++    def switchTable(self):
++        pass
++
++    def deleteTable(self):
++        pass
++
++    def showChangeLog(self):
++        pass
++
+ 
+ print(mod.starting_motd)
+ time.sleep(5)
+Index: app/database/UserDB.py
+===================================================================
+diff --git a/app/database/UserDB.py b/app/database/UserDB.py
+deleted file mode 100644
+--- a/app/database/UserDB.py	(revision 82bc5961c904ea74185d06b227218c3c7eb6f3c2)
++++ /dev/null	(revision 82bc5961c904ea74185d06b227218c3c7eb6f3c2)
+@@ -1,27 +0,0 @@
+-import pymysql
+-
+-
+-class UserDB:
+-    def __init__(self, database):
+-        self.HOST = "localhost"
+-        self.USER = "root"
+-        self.PASSWORD = ""
+-        self.DATABASE = database
+-
+-        try:
+-            self.conn = pymysql.connect(
+-                host=self.HOST,
+-                user=self.USER,
+-                password=self.PASSWORD,
+-                database=self.DATABASE
+-            )
+-
+-            self.cursor = self.conn.cursor()
+-
+-            print(f"Kullanıcı {self.DATABASE} veritabanına bağlandı")
+-
+-        except:
+-            print("UserDB bağlanırken bir hata oluştu.")
+-
+-    def createTable(self):
+-        pass
+Index: app/database/User.py
+===================================================================
+diff --git a/app/database/User.py b/app/database/User.py
+deleted file mode 100644
+--- a/app/database/User.py	(revision 82bc5961c904ea74185d06b227218c3c7eb6f3c2)
++++ /dev/null	(revision 82bc5961c904ea74185d06b227218c3c7eb6f3c2)
+@@ -1,17 +0,0 @@
+-class User:
+-    def __init__(self, id, email, username, password, permission, settings, description):
+-        self.USER_ID = id
+-        self.USER_EMAIL = email
+-        self.USER_USERNAME = username
+-        self.USER_PASSWORD = password
+-        self.USER_PERMISSION = permission
+-        self.USER_SETTINGS = settings
+-        self.USER_DESCRIPTION = description
+-
+-    def newTable(self):
+-        pass
+-
+-    def newSubUser(self):
+-        pass
+-
+-    # Kullanıcının yapabileceği işlemler/fonksiyonlar buraya yazılacak.ß
+Index: app/app.py
+===================================================================
+diff --git a/app/app.py b/app/app.py
+deleted file mode 100644
+--- a/app/app.py	(revision 82bc5961c904ea74185d06b227218c3c7eb6f3c2)
++++ /dev/null	(revision 82bc5961c904ea74185d06b227218c3c7eb6f3c2)
+@@ -1,100 +0,0 @@
+-import database.MyDB as mydb
+-import MyMods.settings as mod
+-
+-
+-class App:
+-    def __init__(self, user):
+-        self.db = mydb.MyDB()
+-        self.db.connect()
+-
+-        self.user = user
+-
+-        self.user_permission = self.user.USER_PERMISSION
+-
+-    def start(self):
+-        while True:
+-            if self.user_permission == "subuser":
+-                print(mod.subuser_menu)
+-
+-                doit = input("İşlem numarası girin: ")
+-
+-                if doit == "0":
+-                    break
+-                elif doit == "1":
+-                    print("Seçildi: ", doit)
+-                elif doit == "2":
+-                    print("Seçildi: ", doit)
+-                elif doit == "3":
+-                    print("Seçildi: ", doit)
+-                elif doit == "4":
+-                    print("Seçildi: ", doit)
+-                else:
+-                    print("Geçersiz işlem")
+-
+-            elif self.user_permission == "user" or "developer":
+-                print(mod.user_menu)
+-
+-                doit = input("İşlem numarası girin: ")
+-
+-                if doit == "0":
+-                    break
+-                elif doit == "1":
+-                    print("Seçildi: ", doit)
+-                elif doit == "2":
+-                    print("Seçildi: ", doit)
+-                elif doit == "3":
+-                    print("Seçildi: ", doit)
+-                elif doit == "4":
+-                    print("Seçildi: ", doit)
+-                elif doit == "5":
+-                    print("Seçildi: ", doit)
+-                elif doit == "6":
+-                    print("Seçildi: ", doit)
+-                elif doit == "7":
+-                    print("Seçildi: ", doit)
+-                elif doit == "8":
+-                    self.user.newTable()
+-                elif doit == "9":
+-                    print("Seçildi: ", doit)
+-                elif doit == "10":
+-                    print("Seçildi: ", doit)
+-                elif doit == "11":
+-                    print("Seçildi: ", doit)
+-                else:
+-                    pass
+-            else:
+-                print("Devam etmek için gerekli yetkiye sahip değilsin!")
+-                break
+-
+-    def showAllData(self):
+-        pass
+-
+-    def addNew(self, a, b, c, d, x1, x2, y1, y2, z):
+-        pass
+-
+-    def edit(self):
+-        pass
+-
+-    def delete(self):
+-        pass
+-
+-    def newSubUser(self):
+-        pass
+-
+-    def editSubUser(self):
+-        pass
+-
+-    def deleteSubUser(self):
+-        pass
+-
+-    def newTable(self):
+-        pass
+-
+-    def switchTable(self):
+-        pass
+-
+-    def deleteTable(self):
+-        pass
+-
+-    def showChangeLog(self):
+-        pass
