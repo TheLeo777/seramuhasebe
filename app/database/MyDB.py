@@ -1,6 +1,4 @@
 import pymysql
-import User as userr
-import UserDB as userdb
 
 
 class MyDB:
@@ -95,7 +93,7 @@ class MyDB:
             permission = data[4]
             settings = data[5]
             description = data[6]
-            user = userr.User(id, email, username, password, permission, settings, description)
+            user = User(id, email, username, password, permission, settings, description)
 
             if permission == "developer":
                 print("geliştirici modu")
@@ -103,8 +101,53 @@ class MyDB:
                 dbname = email.split('@')
                 dbname = dbname[0] + "#" + dbname[1] + "_" + username
 
-                userdb.UserDB(dbname)
+                UserDB(dbname)
             return True, user
         else:
             print("data yok")
             return False
+
+
+class User:
+    def __init__(self, id, email, username, password, permission, settings, description):
+        self.USER_ID = id
+        self.USER_EMAIL = email
+        self.USER_USERNAME = username
+        self.USER_PASSWORD = password
+        self.USER_PERMISSION = permission
+        self.USER_SETTINGS = settings
+        self.USER_DESCRIPTION = description
+
+    def newTable(self):
+        pass
+
+    def newSubUser(self):
+        pass
+
+    # Kullanıcının yapabileceği işlemler/fonksiyonlar buraya yazılacak.ß
+
+
+class UserDB:
+    def __init__(self, database):
+        self.HOST = "localhost"
+        self.USER = "root"
+        self.PASSWORD = ""
+        self.DATABASE = database
+
+        try:
+            self.conn = pymysql.connect(
+                host=self.HOST,
+                user=self.USER,
+                password=self.PASSWORD,
+                database=self.DATABASE
+            )
+
+            self.cursor = self.conn.cursor()
+
+            print(f"Kullanıcı {self.DATABASE} veritabanına bağlandı")
+
+        except:
+            print("UserDB bağlanırken bir hata oluştu.")
+
+    def createTable(self):
+        pass
