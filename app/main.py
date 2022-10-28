@@ -23,10 +23,6 @@ class App:
                     print("Seçildi: ", doit)
                 elif doit == "2":
                     print("Seçildi: ", doit)
-                elif doit == "3":
-                    print("Seçildi: ", doit)
-                elif doit == "4":
-                    print("Seçildi: ", doit)
                 else:
                     print("Geçersiz işlem")
 
@@ -45,22 +41,8 @@ class App:
                     print("Seçildi: ", doit)
                 elif doit == "4":
                     print("Seçildi: ", doit)
-                elif doit == "5":
-                    print("Seçildi: ", doit)
-                elif doit == "6":
-                    print("Seçildi: ", doit)
-                elif doit == "7":
-                    print("Seçildi: ", doit)
-                elif doit == "8":
-                    print("Seçildi: ", doit)
-                elif doit == "9":
-                    print("Seçildi: ", doit)
-                elif doit == "10":
-                    print("Seçildi: ", doit)
-                elif doit == "11":
-                    print("Seçildi: ", doit)
                 else:
-                    pass
+                    print("Geçersiz işlem")
             else:
                 print("Devam etmek için gerekli yetkiye sahip değilsin!")
                 break
@@ -75,15 +57,6 @@ class App:
         pass
 
     def delete(self):
-        pass
-
-    def newSubUser(self):
-        pass
-
-    def editSubUser(self):
-        pass
-
-    def deleteSubUser(self):
         pass
 
 
@@ -104,7 +77,7 @@ while True:
             email = input("Email: ")
             username = input("Kullanıcı adı: ")
             password = input("Şifre: ")
-            mailCheck = db._register(email, username, password)
+            mailCheck = db.register(email, username, password)
 
             if mailCheck == True:
                 print("kayıt başarılı.")
@@ -117,7 +90,7 @@ while True:
         mod.clear()
 
         while True:
-            auth, user = db._login()
+            auth, user = db.login()
             if auth == True:
                 if user:
                     app = App(user)
@@ -127,7 +100,7 @@ while True:
                 continue
         break
     else:
-        auth, user = db._login()
+        auth, user = db.login()
         if auth == True:
             if user:
                 app = App(user)

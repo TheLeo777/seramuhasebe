@@ -42,8 +42,6 @@ subuser_menu = """
                     #
                     # 1-) Kayıtları Gör
                     # 2-) Yeni Kayıt Ekle
-                    # 3-) Kayıt Düzenle
-                    # 4-) Kayıt Sil
                     #
                     # 0-) Çıkış
                     #
@@ -57,9 +55,6 @@ user_menu = """
                     # 2-) Yeni Kayıt Ekle
                     # 3-) Kayıt Düzenle
                     # 4-) Kayıt Sil
-                    # 5-) Alt Kullanıcı Oluştur
-                    # 6-) Alt Kullanıcı Düzenle
-                    # 7-) Alt Kullanıcı Sil
                     #
                     # 0-) Çıkış
                     #

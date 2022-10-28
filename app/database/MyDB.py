@@ -49,7 +49,7 @@ class MyDB:
 
         print("Veritabanı bağlantısı kuruldu.")
 
-    def _register(self, email, username, password):
+    def register(self, email, username, password):
         cstr1 = "SELECT * FROM `users` WHERE email = '{}'"
         cstr1 = cstr1.format(email)
         self.cursor.execute(cstr1)
@@ -74,7 +74,7 @@ class MyDB:
             print("kayıt yapıldı")
             return True
 
-    def _login(self):
+    def login(self):
         email = input("Email: ")
         password = input("Şifre: ")
 
