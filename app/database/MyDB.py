@@ -101,8 +101,8 @@ class MyDB:
                 dbname = email.split('@')
                 dbname = dbname[0] + "#" + dbname[1] + "_" + username
 
-                UserDB(dbname)
-            return True, user
+                userdb = UserDB(dbname, user)
+                return True, user, userdb
         else:
             print("data yok")
             return False
@@ -118,23 +118,32 @@ class User:
         self.USER_SETTINGS = settings
         self.USER_DESCRIPTION = description
 
-    def newTable(self):
-        columns = []
-        rows = []
-        print("Yeni tablo oluştur")
+    """def new_cut(self):
+        date = input("Tarih: ")
+        str_count = input("Dal sayısı: ")
+        count = int(str_count)
+        first_kilo = input("Birinci Kilo: ")
+        second_kilo = input("İkinci Kilo: ")
+        str_first_price = input("Birinci Fiyatı: ")
+        first_price = float(str_first_price)
+        second_price = float(first_price / 2)
+        first_income = first_kilo * int(first_price)
+        second_income = second_kilo * int(second_price)
+        total_income = first_income + second_income"""
 
-    def newSubUser(self):
-        pass
 
-    # Kullanıcının yapabileceği işlemler/fonksiyonlar buraya yazılacak.ß
+
+    # Kullanıcının yapabileceği işlemler/fonksiyonlar buraya yazılacak.
 
 
 class UserDB:
-    def __init__(self, database):
+    def __init__(self, database, user):
         self.HOST = "localhost"
         self.USER = "root"
         self.PASSWORD = ""
         self.DATABASE = database
+
+        self.user_permission = user.USER_PERMISSION
 
         try:
             self.conn = pymysql.connect(
@@ -151,5 +160,42 @@ class UserDB:
         except:
             print("UserDB bağlanırken bir hata oluştu.")
 
-    def createTable(self):
-        pass
+        if self.user_permission == "subuser":
+            pass
+        elif self.user_permission == "user":
+            try:
+                qstr1 = " SELECT * FROM cuts "
+                self.cursor.execute(qstr1)
+                table = self.cursor.fetchone()
+            except pymysql.err.ProgrammingError:
+                qstr2 = " CREATE TABLE IF NOT EXISTS cuts ( ID INT AUTO_INCREMENT NOT NULL, date varchar(255) NOT NULL," \
+                        " count varchar(255) NOT NULL, first_kilo varchar(255) NOT NULL, second_kilo varchar(255) NOT NULL," \
+                        " first_price varchar(255) NOT NULL, second_price varchar(255) NOT NULL, first_income varchar(255) NOT NULL," \
+                        " second_income varchar(255) NOT NULL, total_income varchar(255) NOT NULL, PRIMARY KEY (ID) ) "
+                self.cursor.execute(qstr2)
+                self.conn.commit()
+                print(f"{self.DATABASE} veritabanında tablo oluşturuldu.", qstr2)
+        else:
+            print("UserDB tablo kontrolünde hata")
+
+    def new_cut(self):
+        date = input("Tarih: ")
+        str_count = input("Dal sayısı: ")
+        count = int(str_count)
+        first_kilo = input("Birinci Kilo: ")
+        second_kilo = input("İkinci Kilo: ")
+        str_first_price = input("Birinci Fiyatı: ")
+        first_price = float(str_first_price)
+        second_price = float(first_price / 2)
+        first_income = int(first_kilo) * float(first_price)
+        second_income = int(second_kilo) * float(second_price)
+        total_income = first_income + second_income
+
+        qstr1 = " INSERT INTO `cuts` (`date`, `count`, `first_kilo`, `second_kilo`, `first_price`," \
+                " `second_price`,`first_income`, `second_income`, `total_income`) VALUES " \
+                "('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}') "
+
+        qstr1 = qstr1.format(date, count, first_kilo, second_kilo, first_price, second_price, first_income, second_income, total_income)
+        self.cursor.execute(qstr1)
+        self.conn.commit()
+        print("Kesim kaydedildi", qstr1)

@@ -1,11 +1,15 @@
 import time
 import MyMods.settings as mod
-import database.MyDB as mydb
+#import database.MyDB as mydb
+from database.MyDB import MyDB, User
+
 
 class App:
-    def __init__(self, user):
-        self.db = mydb.MyDB()
+    def __init__(self, user, userdb):
+        self.db = MyDB()
         self.db.connect()
+
+        self.userdb = userdb
 
         self.user = user
         self.user_permission = self.user.USER_PERMISSION
@@ -21,6 +25,7 @@ class App:
                     break
                 elif doit == "1":
                     print("Seçildi: ", doit)
+                    self.addNew()
                 elif doit == "2":
                     print("Seçildi: ", doit)
                 else:
@@ -35,6 +40,7 @@ class App:
                     break
                 elif doit == "1":
                     print("Seçildi: ", doit)
+                    self.addNew()
                 elif doit == "2":
                     print("Seçildi: ", doit)
                 elif doit == "3":
@@ -50,8 +56,8 @@ class App:
     def showAllData(self):
         pass
 
-    def addNew(self, a, b, c, d, x1, x2, y1, y2, z):
-        pass
+    def addNew(self):
+        self.userdb.new_cut()
 
     def edit(self):
         pass
@@ -65,10 +71,11 @@ time.sleep(5)
 mod.clear()
 
 while True:
-    db = mydb.MyDB()
+    db = MyDB()
     db.connect()
-    haveAccount = input("Mevcut bir hesabınız yok ise 'Q' yazarak yeni bir hesap oluşturulabilirsiniz. Mevcut hesabınız ile giriş yapmak için 'Enter' basarak devam ediniz.")
-    "asdasd"
+    haveAccount = input(
+        "Mevcut bir hesabınız yok ise 'Q' yazarak yeni bir hesap oluşturabilirsiniz. Mevcut hesabınız ile giriş yapmak için 'Enter' basarak devam ediniz.")
+
     if haveAccount == "Q":
         print("Bilgilerinizi dikkatle giriniz.")
         time.sleep(5)
@@ -90,24 +97,23 @@ while True:
         mod.clear()
 
         while True:
-            auth, user = db.login()
-            if auth == True:
+            auth, user, userdb = db.login()
+            if auth:
+                #user = User(userData[0], userData[1], userData[2], userData[3], userData[4], userData[5], userData[6])
                 if user:
-                    app = App(user)
+                    app = App(user, userdb)
                     app.start()
                     break
             else:
                 continue
         break
     else:
-        auth, user = db.login()
-        if auth == True:
+        auth, user, userdb = db.login()
+        if auth:
+            #user = User(userData[0], userData[1], userData[2], userData[3], userData[4], userData[5], userData[6])
             if user:
-                app = App(user)
+                app = App(user, userdb)
                 app.start()
                 break
         else:
             continue
-
-
-
