@@ -119,7 +119,9 @@ class User:
         self.USER_DESCRIPTION = description
 
     def newTable(self):
-        pass
+        columns = []
+        rows = []
+        print("Yeni tablo oluştur")
 
     def newSubUser(self):
         pass

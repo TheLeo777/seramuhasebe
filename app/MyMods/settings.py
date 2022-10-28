@@ -60,29 +60,11 @@ user_menu = """
                     # 5-) Alt Kullanıcı Oluştur
                     # 6-) Alt Kullanıcı Düzenle
                     # 7-) Alt Kullanıcı Sil
-                    # 8-) Yeni Tablo Oluştur
-                    # 9-) Tablo Değiştir
-                    # 10-) Tablo Sil
-                    # 11-) Değişiklik Kaydını Görüntüle
                     #
                     # 0-) Çıkış
                     #
                     ########################################
                     """
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

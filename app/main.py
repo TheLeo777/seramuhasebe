@@ -1,7 +1,6 @@
 import time
 import MyMods.settings as mod
 import database.MyDB as mydb
-#from app import App
 
 class App:
     def __init__(self, user):
@@ -9,7 +8,6 @@ class App:
         self.db.connect()
 
         self.user = user
-
         self.user_permission = self.user.USER_PERMISSION
 
     def start(self):
@@ -54,7 +52,7 @@ class App:
                 elif doit == "7":
                     print("Seçildi: ", doit)
                 elif doit == "8":
-                    self.user.newTable()
+                    print("Seçildi: ", doit)
                 elif doit == "9":
                     print("Seçildi: ", doit)
                 elif doit == "10":
@@ -86,18 +84,6 @@ class App:
         pass
 
     def deleteSubUser(self):
-        pass
-
-    def newTable(self):
-        pass
-
-    def switchTable(self):
-        pass
-
-    def deleteTable(self):
-        pass
-
-    def showChangeLog(self):
         pass
 
 
@@ -149,13 +135,6 @@ while True:
                 break
         else:
             continue
-
-
-
-
-
-
-
 
 
 
