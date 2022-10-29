@@ -118,23 +118,6 @@ class User:
         self.USER_SETTINGS = settings
         self.USER_DESCRIPTION = description
 
-    """def new_cut(self):
-        date = input("Tarih: ")
-        str_count = input("Dal sayısı: ")
-        count = int(str_count)
-        first_kilo = input("Birinci Kilo: ")
-        second_kilo = input("İkinci Kilo: ")
-        str_first_price = input("Birinci Fiyatı: ")
-        first_price = float(str_first_price)
-        second_price = float(first_price / 2)
-        first_income = first_kilo * int(first_price)
-        second_income = second_kilo * int(second_price)
-        total_income = first_income + second_income"""
-
-
-
-    # Kullanıcının yapabileceği işlemler/fonksiyonlar buraya yazılacak.
-
 
 class UserDB:
     def __init__(self, database, user):
@@ -207,3 +190,28 @@ class UserDB:
             self.cursor.execute(qstr2)
             self.conn.commit()
             print("Kesim kaydedildi", qstr2)
+
+    def showAllData(self):
+        qstr1 = " SELECT * FROM cuts "
+        self.cursor.execute(qstr1)
+        data = self.cursor.fetchall()
+
+        print(50*'#')
+        for i in data:
+            a = i[0]
+            b = i[1]
+            c = i[2]
+            d = i[3]
+            e = i[4]
+            f = i[5]
+            g = i[6]
+            h = i[7]
+            j = i[8]
+            k = i[9]
+
+            table = "ID: {} \n Tarih: {} \n Dal Sayısı: {} \n Birinci Kilo: {} \n İkinci Kilo: {} \n " \
+                    "Birinci Fiyat: {} \n İkinci Fiyat: {} \n Birinci Gelir: {} \n İkinci Gelir: {} \n Toplam Gelir: {}"
+            table = table.format(a,b,c,d,e,f,g,h,j,k)
+            print(table)
+            print(50*'#')
+

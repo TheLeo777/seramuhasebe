@@ -1,7 +1,6 @@
 import time
 import MyMods.settings as mod
-#import database.MyDB as mydb
-from database.MyDB import MyDB, User
+from database.MyDB import MyDB  #, User
 
 
 class App:
@@ -25,9 +24,10 @@ class App:
                     break
                 elif doit == "1":
                     print("Seçildi: ", doit)
-                    self.addNew()
+                    self.showAllData()
                 elif doit == "2":
                     print("Seçildi: ", doit)
+                    self.new_cut()
                 else:
                     print("Geçersiz işlem")
 
@@ -40,9 +40,10 @@ class App:
                     break
                 elif doit == "1":
                     print("Seçildi: ", doit)
-                    self.addNew()
+                    self.showAllData()
                 elif doit == "2":
                     print("Seçildi: ", doit)
+                    self.new_cut()
                 elif doit == "3":
                     print("Seçildi: ", doit)
                 elif doit == "4":
@@ -54,9 +55,9 @@ class App:
                 break
 
     def showAllData(self):
-        pass
+        self.userdb.showAllData()
 
-    def addNew(self):
+    def new_cut(self):
         self.userdb.new_cut()
 
     def edit(self):
@@ -67,18 +68,18 @@ class App:
 
 
 print(mod.starting_motd)
-time.sleep(5)
+time.sleep(2)
 mod.clear()
 
 while True:
     db = MyDB()
     db.connect()
-    haveAccount = input(
-        "Mevcut bir hesabınız yok ise 'Q' yazarak yeni bir hesap oluşturabilirsiniz. Mevcut hesabınız ile giriş yapmak için 'Enter' basarak devam ediniz.")
+    haveAccount = input("Mevcut bir hesabınız yok ise 'Q' yazarak yeni bir hesap oluşturabilirsiniz. "
+                        "Mevcut hesabınız ile giriş yapmak için 'Enter' basarak devam ediniz.")
 
     if haveAccount == "Q":
         print("Bilgilerinizi dikkatle giriniz.")
-        time.sleep(5)
+        time.sleep(3)
         mod.clear()
         while True:
             email = input("Email: ")
@@ -93,27 +94,31 @@ while True:
                 print("mail mevcut")
             else:
                 print("hata")
-        time.sleep(7)
+        time.sleep(4)
         mod.clear()
 
         while True:
+            try:
+                auth, user, userdb = db.login()
+                if auth:
+                    if user:
+                        app = App(user, userdb)
+                        app.start()
+                        break
+                else:
+                    continue
+            except:
+                pass
+        break
+    else:
+        try:
             auth, user, userdb = db.login()
             if auth:
-                #user = User(userData[0], userData[1], userData[2], userData[3], userData[4], userData[5], userData[6])
                 if user:
                     app = App(user, userdb)
                     app.start()
                     break
             else:
                 continue
-        break
-    else:
-        auth, user, userdb = db.login()
-        if auth:
-            #user = User(userData[0], userData[1], userData[2], userData[3], userData[4], userData[5], userData[6])
-            if user:
-                app = App(user, userdb)
-                app.start()
-                break
-        else:
-            continue
+        except:
+            pass
