@@ -191,11 +191,19 @@ class UserDB:
         second_income = int(second_kilo) * float(second_price)
         total_income = first_income + second_income
 
-        qstr1 = " INSERT INTO `cuts` (`date`, `count`, `first_kilo`, `second_kilo`, `first_price`," \
-                " `second_price`,`first_income`, `second_income`, `total_income`) VALUES " \
-                "('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}') "
-
-        qstr1 = qstr1.format(date, count, first_kilo, second_kilo, first_price, second_price, first_income, second_income, total_income)
+        qstr1 = " SELECT * FROM cuts WHERE date = '{}' "
+        qstr1 = qstr1.format(date)
         self.cursor.execute(qstr1)
-        self.conn.commit()
-        print("Kesim kaydedildi", qstr1)
+        date_exists = self.cursor.fetchone()
+
+        if date_exists:
+            print("Bu tarihle bir kayıt mevcut.")
+        else:
+            qstr2 = " INSERT INTO `cuts` (`date`, `count`, `first_kilo`, `second_kilo`, `first_price`," \
+                    " `second_price`,`first_income`, `second_income`, `total_income`) VALUES " \
+                    "('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}') "
+
+            qstr2 = qstr2.format(date, count, first_kilo, second_kilo, first_price, second_price, first_income, second_income, total_income)
+            self.cursor.execute(qstr2)
+            self.conn.commit()
+            print("Kesim kaydedildi", qstr2)
