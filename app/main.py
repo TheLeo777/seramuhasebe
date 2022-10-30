@@ -98,20 +98,6 @@ while True:
         mod.clear()
 
         while True:
-            try:
-                auth, user, userdb = db.login()
-                if auth:
-                    if user:
-                        app = App(user, userdb)
-                        app.start()
-                        break
-                else:
-                    continue
-            except:
-                pass
-        break
-    else:
-        try:
             auth, user, userdb = db.login()
             if auth:
                 if user:
@@ -120,5 +106,13 @@ while True:
                     break
             else:
                 continue
-        except:
-            pass
+        break
+    else:
+        auth, user, userdb = db.login()
+        if auth:
+            if user:
+                app = App(user, userdb)
+                app.start()
+                break
+        else:
+            continue

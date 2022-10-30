@@ -152,9 +152,9 @@ class UserDB:
                 table = self.cursor.fetchone()
             except pymysql.err.ProgrammingError:
                 qstr2 = " CREATE TABLE IF NOT EXISTS cuts ( ID INT AUTO_INCREMENT NOT NULL, date varchar(255) NOT NULL," \
-                        " count varchar(255) NOT NULL, first_kilo varchar(255) NOT NULL, second_kilo varchar(255) NOT NULL," \
-                        " first_price varchar(255) NOT NULL, second_price varchar(255) NOT NULL, first_income varchar(255) NOT NULL," \
-                        " second_income varchar(255) NOT NULL, total_income varchar(255) NOT NULL, PRIMARY KEY (ID) ) "
+                        " count int NOT NULL, first_kilo int NOT NULL, second_kilo int NOT NULL," \
+                        " first_price float NOT NULL, second_price float NOT NULL, first_income int NOT NULL," \
+                        " second_income int NOT NULL, total_income int NOT NULL, PRIMARY KEY (ID) ) "
                 self.cursor.execute(qstr2)
                 self.conn.commit()
                 print(f"{self.DATABASE} veritabanında tablo oluşturuldu.", qstr2)
@@ -196,22 +196,40 @@ class UserDB:
         self.cursor.execute(qstr1)
         data = self.cursor.fetchall()
 
+        count_total = 0
+        firstkilo_total = 0
+        secondkilo_total = 0
+        income_total = 0
+
         print(50*'#')
         for i in data:
-            a = i[0]
-            b = i[1]
-            c = i[2]
-            d = i[3]
-            e = i[4]
-            f = i[5]
-            g = i[6]
-            h = i[7]
-            j = i[8]
-            k = i[9]
+            a = int(i[0])
+            b = int(i[1])
+            c = int(i[2])
+            d = int(i[3])
+            e = int(i[4])
+            f = float(i[5])
+            g = float(i[6])
+            h = int(i[7])
+            j = int(i[8])
+            k = float(i[9])
+
+            count_total += int(i[2])
+            firstkilo_total += int(i[3])
+            secondkilo_total += int(i[4])
+            income_total += float(i[9])
 
             table = "ID: {} \n Tarih: {} \n Dal Sayısı: {} \n Birinci Kilo: {} \n İkinci Kilo: {} \n " \
                     "Birinci Fiyat: {} \n İkinci Fiyat: {} \n Birinci Gelir: {} \n İkinci Gelir: {} \n Toplam Gelir: {}"
             table = table.format(a,b,c,d,e,f,g,h,j,k)
+            print(50*'#')
             print(table)
             print(50*'#')
+            print('\n')
+            totals = " Toplam Dal: {} || Toplam Birinci: {} \n Toplam İkinci: {} || Toplam Gelir: {} "
+            totals = totals.format(count_total, firstkilo_total, secondkilo_total, income_total)
+            print(50*'#')
+            print(totals)
+            print(50*'#')
+            print('\n')
 

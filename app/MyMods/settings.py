@@ -31,7 +31,7 @@ def clear():
 
 
 # MOTD STRING
-starting_motd = motd_stars * f"{bcolors.OKCYAN}*{bcolors.ENDC}" + "\n" + f"{bcolors.WARNING}Hoşgeldiniz" + \
+starting_motd = motd_stars * f"{bcolors.OKCYAN}*{bcolors.ENDC}" + "\n" + f"{bcolors.OKGREEN}Hoşgeldiniz" + \
                 "\n" +  f"Tarih ve Saat: {datetime} {bcolors.ENDC}" +  "\n" + motd_stars * f"{bcolors.OKCYAN}*{bcolors.ENDC}"
 
 
