@@ -204,7 +204,7 @@ class UserDB:
         print(50*'#')
         for i in data:
             a = int(i[0])
-            b = int(i[1])
+            b = i[1]
             c = int(i[2])
             d = int(i[3])
             e = int(i[4])
