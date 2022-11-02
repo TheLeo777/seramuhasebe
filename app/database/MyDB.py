@@ -1,3 +1,5 @@
+import time
+
 import pymysql
 
 
@@ -196,6 +198,7 @@ class UserDB:
         self.cursor.execute(qstr1)
         data = self.cursor.fetchall()
 
+        counter = 0
         count_total = 0
         firstkilo_total = 0
         secondkilo_total = 0
@@ -203,6 +206,7 @@ class UserDB:
 
         print(50*'#')
         for i in data:
+            counter = counter++1
             a = int(i[0])
             b = i[1]
             c = int(i[2])
@@ -232,4 +236,67 @@ class UserDB:
             print(totals)
             print(50*'#')
             print('\n')
+        print(f"{counter} adet kayıt bulundu.")
+
+    def showData(self):
+        print("""
+        Arama yapmak için tarih formatları;
+        
+        GG/AA/YYYY
+        AA/YYYY
+        YYYY
+        
+        bu formatlar haricinde yapılan aramalar bir sonuç göstermeyecektir.
+        """)
+        time.sleep(2)
+        date = input("Tarih girin: ")
+
+        qstr1 = " SELECT * FROM cuts WHERE date LIKE '%{}' "
+        qstr1 = qstr1.format(date)
+        self.cursor.execute(qstr1)
+        data = self.cursor.fetchall()
+
+        if data:
+            counter = 0
+            count_total = 0
+            firstkilo_total = 0
+            secondkilo_total = 0
+            income_total = 0
+
+            print(50 * '#')
+            for i in data:
+                counter = counter++1
+                a = int(i[0])
+                b = i[1]
+                c = int(i[2])
+                d = int(i[3])
+                e = int(i[4])
+                f = float(i[5])
+                g = float(i[6])
+                h = int(i[7])
+                j = int(i[8])
+                k = float(i[9])
+
+                count_total += int(i[2])
+                firstkilo_total += int(i[3])
+                secondkilo_total += int(i[4])
+                income_total += float(i[9])
+
+                table = "ID: {} \n Tarih: {} \n Dal Sayısı: {} \n Birinci Kilo: {} \n İkinci Kilo: {} \n " \
+                        "Birinci Fiyat: {} \n İkinci Fiyat: {} \n Birinci Gelir: {} \n İkinci Gelir: {} \n Toplam Gelir: {}"
+                table = table.format(a, b, c, d, e, f, g, h, j, k)
+                print(50 * '#')
+                print(table)
+                print(50 * '#')
+                print('\n')
+                totals = " Toplam Dal: {} || Toplam Birinci: {} \n Toplam İkinci: {} || Toplam Gelir: {} "
+                totals = totals.format(count_total, firstkilo_total, secondkilo_total, income_total)
+                print(50 * '#')
+                print(totals)
+                print(50 * '#')
+                print('\n')
+            print(f"{counter} adet kayıt bulundu.")
+
+        else:
+            print("Bu tarihte bir kayıt bulunamadı.")
 

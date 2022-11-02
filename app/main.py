@@ -46,6 +46,7 @@ class App:
                     self.new_cut()
                 elif doit == "3":
                     print("Seçildi: ", doit)
+                    self.showData()
                 elif doit == "4":
                     print("Seçildi: ", doit)
                 else:
@@ -56,6 +57,9 @@ class App:
 
     def showAllData(self):
         self.userdb.showAllData()
+
+    def showData(self):
+        self.userdb.showData()
 
     def new_cut(self):
         self.userdb.new_cut()
