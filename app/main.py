@@ -27,6 +27,9 @@ class App:
                     self.showAllData()
                 elif doit == "2":
                     print("Seçildi: ", doit)
+                    self.showData()
+                elif doit == "3":
+                    print("Seçildi: ", doit)
                     self.new_cut()
                 else:
                     print("Geçersiz işlem")
@@ -43,11 +46,13 @@ class App:
                     self.showAllData()
                 elif doit == "2":
                     print("Seçildi: ", doit)
-                    self.new_cut()
+                    self.showData()
                 elif doit == "3":
                     print("Seçildi: ", doit)
-                    self.showData()
+                    self.new_cut()
                 elif doit == "4":
+                    print("Seçildi: ", doit)
+                elif doit == "5":
                     print("Seçildi: ", doit)
                 else:
                     print("Geçersiz işlem")

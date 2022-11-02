@@ -41,7 +41,8 @@ subuser_menu = """
                     ############### IŞLEMLER ###############
                     #
                     # 1-) Kayıtları Gör
-                    # 2-) Yeni Kayıt Ekle
+                    # 2-) Kayıtları Gör (Tarih)
+                    # 3-) Yeni Kayıt Ekle
                     #
                     # 0-) Çıkış
                     #
@@ -52,9 +53,10 @@ user_menu = """
                     ############### IŞLEMLER ###############
                     #
                     # 1-) Kayıtları Gör
-                    # 2-) Yeni Kayıt Ekle
-                    # 3-) Kayıt Düzenle
-                    # 4-) Kayıt Sil
+                    # 2-) Kayıtları Gör (Tarih)
+                    # 3-) Yeni Kayıt Ekle
+                    # 4-) Kayıt Düzenle
+                    # 5-) Kayıt Sil
                     #
                     # 0-) Çıkış
                     #
