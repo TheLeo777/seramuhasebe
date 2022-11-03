@@ -1,5 +1,4 @@
 import time
-
 import pymysql
 
 
@@ -151,7 +150,7 @@ class UserDB:
             try:
                 qstr1 = " SELECT * FROM cuts "
                 self.cursor.execute(qstr1)
-                table = self.cursor.fetchone()
+                self.cursor.fetchone()
             except pymysql.err.ProgrammingError:
                 qstr2 = " CREATE TABLE IF NOT EXISTS cuts ( ID INT AUTO_INCREMENT NOT NULL, date varchar(255) NOT NULL," \
                         " count int NOT NULL, first_kilo int NOT NULL, second_kilo int NOT NULL," \
@@ -160,6 +159,19 @@ class UserDB:
                 self.cursor.execute(qstr2)
                 self.conn.commit()
                 print(f"{self.DATABASE} veritabanında tablo oluşturuldu.", qstr2)
+
+            try:
+                qstr3 = " SELECT * FROM debts "
+                self.cursor.execute(qstr3)
+                self.cursor.fetchone()
+            except pymysql.err.ProgrammingError:
+                qstr4 = " CREATE TABLE IF NOT EXISTS debts ( ID INT AUTO_INCREMENT NOT NULL, amount float NOT NULL," \
+                        " date varchar(255) NOT NULL, owe_to varchar(255) NOT NULL, payer varchar(255) NOT NULL," \
+                        " description varchar(500), PRIMARY KEY (ID) ) "
+                self.cursor.execute(qstr4)
+                self.conn.commit()
+                print(f"{self.DATABASE} veritabanında tablo oluşturuldu.", qstr4)
+
         else:
             print("UserDB tablo kontrolünde hata")
 
@@ -299,4 +311,56 @@ class UserDB:
 
         else:
             print("Bu tarihte bir kayıt bulunamadı.")
+
+    def edit_cut(self):
+        print("Bu fonksiyon şuan kullanılamamaktadır.")
+
+    def delete_cut(self):
+        print("Bu fonksiyon şuan kullanılamamaktadır.")
+
+    def showDebts(self):
+        qstr1 = " SELECT * FROM debts "
+        self.cursor.execute(qstr1)
+        data = self.cursor.fetchall()
+
+        if data:
+            print(65*'*')
+            for i in data:
+                print(f"""
+                ####################################
+                # ID: {i[0]}
+                # Tarih: {i[2]}
+                # Borç miktarı: {i[1]}
+                # Veren kişi: {i[3]}
+                # Alan kişi: {i[4]}
+                # Açıklama: {i[5]}
+                ####################################
+                """)
+            print(65*'*')
+
+    def addDebts(self):
+        amount = input("Alınan/Verilen miktarı girin: ")
+        date = input("Tarih: ")
+        owe_to = input("Veren kişi: ")
+        payer = input("Alan kişi kişi: ")
+        description = input("Açıklama: ")
+
+        qstr1 = " INSERT INTO `debts`(`amount`, `date`, `owe_to`, `payer`, `description`)" \
+                " VALUES ('{}','{}','{}','{}','{}') "
+        qstr1 = qstr1.format(amount,date,owe_to,payer,description)
+        self.cursor.execute(qstr1)
+        self.conn.commit()
+        print("Alacak/Verecek kaydedildi.", qstr1)
+
+    def editDebts(self):
+        print("Bu fonksiyon şuan kullanılamamaktadır.")
+
+    def deleteDebt(self):
+        id = input("Silmek istediğiniz Alacak/Verecek ID'sini girin: ")
+        qstr1 = " DELETE FROM debts WHERE ID = '{}' "
+        qstr1 = qstr1.format(id)
+        self.cursor.execute(qstr1)
+        self.conn.commit()
+
+        print(f"{id} ID'ye sahip Alacak/Verecek silindi.")
 

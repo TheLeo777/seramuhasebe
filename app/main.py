@@ -31,6 +31,9 @@ class App:
                 elif doit == "3":
                     print("Seçildi: ", doit)
                     self.new_cut()
+                elif doit == "4":
+                    print("Seçildi", doit)
+                    self.showDebts()
                 else:
                     print("Geçersiz işlem")
 
@@ -52,8 +55,22 @@ class App:
                     self.new_cut()
                 elif doit == "4":
                     print("Seçildi: ", doit)
+                    self.edit_cut()
                 elif doit == "5":
                     print("Seçildi: ", doit)
+                    self.delete_cut()
+                elif doit == "6":
+                    print("Seçildi: ", doit)
+                    self.showDebts()
+                elif doit == "7":
+                    print("Seçildi: ", doit)
+                    self.addDebts()
+                elif doit == "8":
+                    print("Seçildi: ", doit)
+                    self.editDebts()
+                elif doit == "9":
+                    print("Seçildi: ", doit)
+                    self.deleteDebt()
                 else:
                     print("Geçersiz işlem")
             else:
@@ -69,11 +86,24 @@ class App:
     def new_cut(self):
         self.userdb.new_cut()
 
-    def edit(self):
-        pass
+    def edit_cut(self):
+        self.userdb.edit_cut()
 
-    def delete(self):
-        pass
+    def delete_cut(self):
+        self.userdb.delete_cut()
+
+    def showDebts(self):
+        self.userdb.showDebts()
+
+    def addDebts(self):
+        self.userdb.addDebts()
+
+    def editDebts(self):
+        self.userdb.editDebts()
+
+    def deleteDebt(self):
+        self.userdb.deleteDebt()
+
 
 
 print(mod.starting_motd)

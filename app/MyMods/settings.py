@@ -43,6 +43,7 @@ subuser_menu = """
                     # 1-) Kayıtları Gör
                     # 2-) Kayıtları Gör (Tarih)
                     # 3-) Yeni Kayıt Ekle
+                    # 4-) Alacak/Verecek Gör
                     #
                     # 0-) Çıkış
                     #
@@ -57,6 +58,10 @@ user_menu = """
                     # 3-) Yeni Kayıt Ekle
                     # 4-) Kayıt Düzenle
                     # 5-) Kayıt Sil
+                    # 6-) Alacak/Verecek Gör
+                    # 7-) Alacak/Verecek Ekle
+                    # 8-) Alacak/Verecek Düzenle
+                    # 9-) Alacak/Verecek Sil
                     #
                     # 0-) Çıkış
                     #
